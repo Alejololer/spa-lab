@@ -45,10 +45,13 @@ Sigue los pasos abajo para crear el proyecto funcional y usar este código.
 
 ## Pantallas
 - Pantalla de login
+
 ![alt text](image.png)
 - Menu
+
 ![alt text](image-1.png)
 - Dashboard
+
 ![alt text](image-2.png)
 
 ## Hecho por:
