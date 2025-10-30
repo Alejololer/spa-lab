@@ -1,0 +1,105 @@
+<div class="productos-container">
+  <div class="header">
+    <h1>Gestión de Productos</h1>
+    <p class="subtitle">Administra tu catálogo de productos</p>
+  </div>
+
+  <div class="content">
+    <!-- Form Section -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>{{ editando ? 'Editar Producto' : 'Nuevo Producto' }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="guardar()" novalidate class="form-grid">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Código</mat-label>
+            <input matInput formControlName="codigo" placeholder="Ej: A001">
+            <mat-error *ngIf="codigo.invalid && (codigo.dirty || codigo.touched)">
+              Inicia con letra + números (Ej: A001)
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" placeholder="Nombre del producto">
+            <mat-error *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+              Mínimo 5 caracteres
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Costo</mat-label>
+            <input matInput type="number" formControlName="costo" placeholder="0.00">
+            <mat-error *ngIf="costo.invalid && (costo.dirty || costo.touched)">
+              Costo inválido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Precio</mat-label>
+            <input matInput type="number" step="0.01" formControlName="precio" placeholder="10-100">
+            <mat-error *ngIf="precio.invalid && (precio.dirty || precio.touched)">
+              <span *ngIf="precio.errors?.['precioFueraRango']">Rango: 10 - 100</span>
+              <span *ngIf="precio.errors?.['precioInvalido']">Precio inválido</span>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Valor</mat-label>
+            <input matInput type="number" step="0.01" formControlName="valor" placeholder="Opcional">
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid" class="btn-submit">
+              {{ editando ? 'Actualizar' : 'Guardar' }}
+            </button>
+            <button mat-stroked-button type="button" (click)="form.reset()" class="btn-clear">
+              Limpiar
+            </button>
+            <button *ngIf="editando" mat-stroked-button type="button" (click)="cancelar()" class="btn-cancel">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Products List Section -->
+    <mat-card class="products-card">
+      <mat-card-header>
+        <mat-card-title>Productos Registrados</mat-card-title>
+        <span class="product-count">{{ productos.length }}</span>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="cargando" class="loading">Cargando productos...</div>
+        <div *ngIf="!cargando && productos.length === 0" class="empty-state">
+          <p>No hay productos registrados</p>
+        </div>
+        <div *ngIf="!cargando && productos.length > 0" class="products-list">
+          <div *ngFor="let p of productos" class="product-item">
+            <div class="product-info">
+              <div class="product-code">{{ p.codigo }}</div>
+              <div class="product-details">
+                <div class="product-name">{{ p.nombre }}</div>
+                <div class="product-prices">
+                  <span class="price-item"><strong>Costo:</strong> ${{ p.costo }}</span>
+                  <span class="price-item"><strong>Precio:</strong> ${{ p.precio }}</span>
+                  <span class="price-item" *ngIf="p.valor"><strong>Valor:</strong> ${{ p.valor }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="product-actions">
+              <button mat-icon-button color="primary" (click)="editar(p)" matTooltip="Editar" class="btn-edit">
+                ✎
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminar(p.id)" matTooltip="Eliminar" class="btn-delete">
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
